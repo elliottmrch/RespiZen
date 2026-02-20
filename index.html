@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Respizen — Cohérence Cardiaque</title>
+    <meta name="description"
+        content="Respizen — Application de cohérence cardiaque pour la relaxation et le bien-être.">
+
+    <!-- Police Google Fonts "Inter" — moderne et lisible -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icônes Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles de l'application -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ==========================================
+         BARRE DU HAUT
+         Contient le sélecteur de mode (au repos)
+         ou le chrono + cycles (en session)
+         ========================================== -->
+    <div class="top-bar">
+
+        <!-- Bouton hamburger (visible uniquement sur mobile) -->
+        <button id="menuBtn" class="menu-btn" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <!-- Sélecteur de mode : visible quand la session est arrêtée -->
+        <div id="modeSelector" class="mode-selector">
+            <button id="modeCircle" class="mode-btn active">
+                <i class="fa-regular fa-circle"></i>
+                <span>Cercle</span>
+            </button>
+            <button id="modeTube" class="mode-btn">
+                <i class="fa-solid fa-arrows-up-down"></i>
+                <span>Tube</span>
+            </button>
+        </div>
+
+        <!-- Infos de session : visible quand la session est en cours -->
+        <div id="sessionInfo" class="session-info-top">
+            <div class="info-chip">
+                <i class="fa-regular fa-clock"></i>
+                <span id="countdownDisplayTop"></span>
+            </div>
+            <div class="info-chip">
+                <i class="fa-solid fa-rotate"></i>
+                <span id="cycleDisplayTop"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         BOUTON PARAMÈTRES (en haut à droite)
+         ========================================== -->
+    <button id="settingsBtn" class="settings-btn" aria-label="Paramètres">
+        <i class="fa-solid fa-gear"></i>
+    </button>
+
+    <!-- ==========================================
+         PANNEAU PARAMÈTRES
+         Couleur d'accent, thème sombre/clair, langue
+         ========================================== -->
+    <div id="settingsPanel" class="settings-panel">
+        <h3 id="settingsTitle"><i class="fa-solid fa-sliders"></i> Paramètres</h3>
+
+        <!-- Choix de la couleur d'accent -->
+        <div class="setting-group">
+            <label id="colorLabel"><i class="fa-solid fa-palette"></i> Couleur</label>
+            <div class="color-options">
+                <button class="color-dot active" data-color="yellow" style="background: #FFD700;"
+                    aria-label="Jaune"></button>
+                <button class="color-dot" data-color="green" style="background: #4CAF50;" aria-label="Vert"></button>
+                <button class="color-dot" data-color="blue" style="background: #2196F3;" aria-label="Bleu"></button>
+                <button class="color-dot" data-color="red" style="background: #f44336;" aria-label="Rouge"></button>
+                <button class="color-dot" data-color="purple" style="background: #9C27B0;" aria-label="Violet"></button>
+                <button class="color-dot" data-color="pink" style="background: #E91E63;" aria-label="Rose"></button>
+            </div>
+        </div>
+
+        <!-- Choix du thème (sombre / clair) -->
+        <div class="setting-group">
+            <label id="themeLabel"><i class="fa-solid fa-circle-half-stroke"></i> Thème</label>
+            <div class="theme-options">
+                <button class="theme-btn active" data-theme="dark"><i class="fa-solid fa-moon"></i></button>
+                <button class="theme-btn" data-theme="light"><i class="fa-solid fa-sun"></i></button>
+            </div>
+        </div>
+
+        <!-- Choix de la langue -->
+        <div class="setting-group">
+            <label id="langLabel"><i class="fa-solid fa-globe"></i> Langue</label>
+            <div class="lang-options">
+                <button class="lang-btn active" data-lang="fr">FR</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="es">ES</button>
+                <button class="lang-btn" data-lang="zh">中文</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         SIDEBAR MOBILE
+         Contient les réglages (durée session, souffle)
+         et le sélecteur de mode sur mobile
+         ========================================== -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fa-solid fa-sliders"></i> <span id="sidebarTitle">Réglages</span></h3>
+            <button id="sidebarClose" class="sidebar-close" aria-label="Fermer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Mode (dans la sidebar sur mobile) -->
+        <div class="sidebar-section">
+            <label><i class="fa-regular fa-eye"></i> <span id="sidebarModeLabel">Mode</span></label>
+            <div class="sidebar-mode-selector">
+                <button id="sidebarModeCircle" class="sidebar-mode-btn active">
+                    <i class="fa-regular fa-circle"></i> <span>Cercle</span>
+                </button>
+                <button id="sidebarModeTube" class="sidebar-mode-btn">
+                    <i class="fa-solid fa-arrows-up-down"></i> <span>Tube</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Durée de session -->
+        <div class="sidebar-section">
+            <label><i class="fa-regular fa-hourglass-half"></i> <span>Durée Session</span></label>
+            <div class="sidebar-control">
+                <button class="control-btn sidebar-session-minus" aria-label="Diminuer"><i
+                        class="fa-solid fa-minus"></i></button>
+                <span id="sidebarSessionValue" class="sidebar-value">5 min</span>
+                <input type="range" id="sidebarSessionSlider" min="0" max="60" value="5" step="1">
+                <button class="control-btn sidebar-session-plus" aria-label="Augmenter"><i
+                        class="fa-solid fa-plus"></i></button>
+            </div>
+        </div>
+
+        <!-- Durée du souffle -->
+        <div class="sidebar-section">
+            <label><i class="fa-solid fa-wind"></i> <span>Durée Souffle</span></label>
+            <div class="sidebar-control">
+                <button class="control-btn sidebar-breath-minus" aria-label="Diminuer"><i
+                        class="fa-solid fa-minus"></i></button>
+                <span id="sidebarBreathValue" class="sidebar-value">5s</span>
+                <input type="range" id="sidebarBreathSlider" min="3" max="10" value="5" step="1">
+                <button class="control-btn sidebar-breath-plus" aria-label="Augmenter"><i
+                        class="fa-solid fa-plus"></i></button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ==========================================
+         VISUALISATIONS DE RESPIRATION
+         ========================================== -->
+
+    <!-- Mode Cercle -->
+    <div id="circleMode" class="mode-container active">
+        <div class="guide-circle"></div>
+        <div class="circle slide-in"></div>
+    </div>
+
+    <!-- Mode Tube -->
+    <div id="tubeMode" class="mode-container">
+        <div class="tube">
+            <div class="tube-ball"></div>
+        </div>
+    </div>
+
+    <!-- Texte "INSPIREZ" / "EXPIREZ" -->
+    <div id="breathText" class="breath-text"></div>
+
+    <!-- ==========================================
+         CONTRÔLES DU BAS (desktop uniquement)
+         ========================================== -->
+    <div class="bottom-controls">
+
+        <!-- Durée de session -->
+        <div class="control-group" id="sessionControl">
+            <label>
+                <i class="fa-regular fa-hourglass-half"></i>
+                <span>Durée Session</span>
+            </label>
+            <div class="control-inputs">
+                <button id="sessionMinus" class="control-btn" aria-label="Diminuer"><i
+                        class="fa-solid fa-minus"></i></button>
+                <span id="sessionValue">5 min</span>
+                <input type="range" id="sessionSlider" min="0" max="60" value="5" step="1">
+                <button id="sessionPlus" class="control-btn" aria-label="Augmenter"><i
+                        class="fa-solid fa-plus"></i></button>
+            </div>
+        </div>
+
+        <!-- Bouton principal Start / Stop -->
+        <button id="actionButton" class="action-button">
+            <i class="fa-solid fa-play"></i>
+            <span>Start</span>
+        </button>
+
+        <!-- Durée du souffle -->
+        <div class="control-group" id="breathControl">
+            <label>
+                <i class="fa-solid fa-wind"></i>
+                <span>Durée Souffle</span>
+            </label>
+            <div class="control-inputs">
+                <button id="breathMinus" class="control-btn" aria-label="Diminuer"><i
+                        class="fa-solid fa-minus"></i></button>
+                <span id="breathValue">5s</span>
+                <input type="range" id="breathSlider" min="3" max="10" value="5" step="1">
+                <button id="breathPlus" class="control-btn" aria-label="Augmenter"><i
+                        class="fa-solid fa-plus"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bouton Start/Stop flottant (mobile uniquement) -->
+    <button id="mobileActionButton" class="mobile-action-button">
+        <i class="fa-solid fa-play"></i>
+        <span>Start</span>
+    </button>
+
+    <!-- Logique de l'application -->
+    <script src="script.js"></script>
+</body>
+
+</html>
