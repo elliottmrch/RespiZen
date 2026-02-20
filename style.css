@@ -1,14 +1,15 @@
 /* ==========================================================
    RESPIZEN — Feuille de styles
-   Application de cohérence cardiaque
    
-   Organisation :
-   1. Reset & Base (variables de thème, body)
-   2. Barre du haut (sélecteur de mode, infos de session)
+   1. Reset & Base (variables de thème)
+   2. Barre du haut (mode selector, infos session)
    3. Paramètres (bouton, panneau, couleurs, thème, langue)
-   4. Visualisations (cercle, tube, texte de respiration)
-   5. Contrôles du bas (sliders, boutons +/-, bouton Start)
-   6. Responsive
+   4. Visualisations (cercle, tube, texte)
+   5. Contrôles du bas (desktop)
+   6. Bouton hamburger
+   7. Sidebar mobile/tablette
+   8. Bouton Start flottant (mobile/tablette)
+   9. Responsive (≤ 900px et ≤ 500px)
    ========================================================== */
 
 
@@ -16,7 +17,6 @@
    1. RESET & BASE
    ===================== */
 
-/* Reset universel pour éviter les marges/paddings par défaut */
 *,
 *::before,
 *::after {
@@ -25,7 +25,6 @@
     box-sizing: border-box;
 }
 
-/* Corps de la page — contient toutes les variables de thème */
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     height: 100vh;
@@ -34,37 +33,24 @@ body {
     justify-content: center;
     align-items: center;
 
-    /* --- Palette du thème sombre (par défaut) --- */
+    /* --- Thème sombre (défaut) --- */
     --bg-color: #0a0a0f;
     --bg-gradient: radial-gradient(ellipse at 50% 0%, rgba(30, 30, 60, 0.5) 0%, #0a0a0f 70%);
     --text-color: #f0f0f5;
     --text-muted: rgba(255, 255, 255, 0.45);
-    /* texte secondaire */
     --text-subtle: rgba(255, 255, 255, 0.6);
-    /* texte légèrement visible */
     --panel-bg: rgba(20, 20, 35, 0.85);
-    /* fond des panneaux */
     --panel-border: rgba(255, 255, 255, 0.08);
     --control-border: rgba(255, 255, 255, 0.18);
-    /* bordures des boutons */
     --control-hover-bg: rgba(255, 255, 255, 0.08);
-    /* fond au survol */
     --slider-track: rgba(255, 255, 255, 0.12);
-    /* piste du slider */
     --mode-text: rgba(255, 255, 255, 0.45);
-    /* texte des boutons de mode inactifs */
     --breath-text-color: rgba(255, 255, 255, 0.9);
-    /* texte INSPIREZ/EXPIREZ */
     --glass-bg: rgba(255, 255, 255, 0.04);
-    /* fond glassmorphism */
     --glass-border: rgba(255, 255, 255, 0.08);
-    /* bordure glassmorphism */
     --shadow-color: rgba(0, 0, 0, 0.4);
-
-    /* --- Couleur d'accent (modifiable via les paramètres) --- */
     --accent-color: #FFD700;
     --accent-glow: rgba(255, 215, 0, 0.3);
-    /* halo lumineux autour des éléments */
 
     background-color: var(--bg-color);
     background-image: var(--bg-gradient);
@@ -72,7 +58,7 @@ body {
     transition: background-color 0.6s ease, color 0.6s ease, background-image 0.6s ease;
 }
 
-/* --- Palette du thème clair --- */
+/* --- Thème clair --- */
 body.light {
     --bg-color: #f0f0f5;
     --bg-gradient: radial-gradient(ellipse at 50% 0%, rgba(200, 200, 230, 0.4) 0%, #f0f0f5 70%);
@@ -97,7 +83,6 @@ body.light {
    2. BARRE DU HAUT
    ================================ */
 
-/* Conteneur centré en haut de l'écran */
 .top-bar {
     position: absolute;
     top: 32px;
@@ -109,7 +94,7 @@ body.light {
     align-items: center;
 }
 
-/* ---- Sélecteur de mode (Cercle / Tube) ---- */
+/* Sélecteur de mode (Cercle / Tube) */
 .mode-selector {
     display: flex;
     gap: 4px;
@@ -122,7 +107,6 @@ body.light {
     transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* Caché pendant qu'une session est en cours */
 .mode-selector.hidden {
     opacity: 0;
     transform: translateY(-12px);
@@ -130,7 +114,6 @@ body.light {
     position: absolute;
 }
 
-/* Bouton de mode (Cercle ou Tube) */
 .mode-btn {
     background: transparent;
     border: none;
@@ -152,7 +135,6 @@ body.light {
     font-size: 0.85rem;
 }
 
-/* Mode actif : fond coloré avec halo */
 .mode-btn.active {
     background: var(--accent-color);
     color: #000;
@@ -165,8 +147,7 @@ body.light {
     background: var(--control-hover-bg);
 }
 
-/* ---- Infos de session (chrono + cycles) ---- */
-/* Remplace le sélecteur de mode pendant une session */
+/* Infos de session (chrono + cycles, pendant la session) */
 .session-info-top {
     display: flex;
     gap: 16px;
@@ -178,7 +159,6 @@ body.light {
     transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* Visible quand la session est lancée */
 .session-info-top.visible {
     opacity: 1;
     transform: translateY(0);
@@ -186,7 +166,6 @@ body.light {
     position: relative;
 }
 
-/* Petite pastille affichant une info (chrono ou cycles) */
 .info-chip {
     display: flex;
     align-items: center;
@@ -207,7 +186,6 @@ body.light {
     font-size: 0.9rem;
 }
 
-/* Largeur fixe pour éviter que le chrono "saute" quand les chiffres changent */
 .countdown-top {
     min-width: 50px;
     text-align: center;
@@ -223,7 +201,7 @@ body.light {
    3. PARAMÈTRES
    ================================ */
 
-/* Bouton roue crantée en haut à droite */
+/* Bouton ⚙ */
 .settings-btn {
     position: absolute;
     top: 32px;
@@ -245,7 +223,6 @@ body.light {
     align-items: center;
 }
 
-/* Rotation de l'icône au survol */
 .settings-btn:hover {
     color: var(--text-color);
     background: var(--control-hover-bg);
@@ -253,7 +230,7 @@ body.light {
     transform: rotate(60deg);
 }
 
-/* Panneau déroulant des paramètres */
+/* Panneau déroulant */
 .settings-panel {
     position: absolute;
     top: 88px;
@@ -266,7 +243,6 @@ body.light {
     padding: 24px;
     z-index: 200;
     min-width: 240px;
-    /* Caché par défaut avec un léger décalage vers le haut */
     opacity: 0;
     transform: translateY(-8px) scale(0.97);
     pointer-events: none;
@@ -274,14 +250,12 @@ body.light {
     box-shadow: 0 16px 48px var(--shadow-color);
 }
 
-/* Panneau visible */
 .settings-panel.open {
     opacity: 1;
     transform: translateY(0) scale(1);
     pointer-events: all;
 }
 
-/* Titre du panneau */
 .settings-panel h3 {
     color: var(--text-color);
     margin: 0 0 20px 0;
@@ -297,7 +271,6 @@ body.light {
     font-size: 0.95rem;
 }
 
-/* Groupe de réglage (couleur, thème, langue) */
 .setting-group {
     margin-bottom: 20px;
 }
@@ -306,7 +279,6 @@ body.light {
     margin-bottom: 0;
 }
 
-/* Label de chaque réglage */
 .setting-group label {
     color: var(--text-subtle);
     font-size: 0.8rem;
@@ -324,7 +296,6 @@ body.light {
     opacity: 0.7;
 }
 
-/* ---- Points de couleur ---- */
 .color-options {
     display: flex;
     gap: 8px;
@@ -343,14 +314,12 @@ body.light {
     transform: scale(1.18);
 }
 
-/* Point de couleur sélectionné */
 .color-dot.active {
     border-color: var(--text-color);
     box-shadow: 0 0 12px var(--accent-glow);
     transform: scale(1.1);
 }
 
-/* ---- Boutons de thème (sombre / clair) ---- */
 .theme-options {
     display: flex;
     gap: 8px;
@@ -382,7 +351,6 @@ body.light {
     color: var(--text-color);
 }
 
-/* ---- Boutons de langue ---- */
 .lang-options {
     display: flex;
     gap: 6px;
@@ -417,7 +385,6 @@ body.light {
    4. VISUALISATIONS
    ================================ */
 
-/* Conteneur générique pour chaque mode (plein écran, caché par défaut) */
 .mode-container {
     display: none;
     position: absolute;
@@ -427,14 +394,11 @@ body.light {
     height: 100%;
 }
 
-/* Le mode actif est affiché */
 .mode-container.active {
     display: block;
 }
 
-/* ---- MODE CERCLE ---- */
-
-/* Cercle guide en pointillés (montre la taille max du cercle) */
+/* Cercle guide en pointillés */
 .guide-circle {
     width: 500px;
     height: 500px;
@@ -451,12 +415,11 @@ body.light {
     filter: blur(0.5px);
 }
 
-/* Apparaît pendant la session */
 .guide-circle.active {
     opacity: 0.35;
 }
 
-/* Cercle principal de respiration */
+/* Cercle principal */
 .circle {
     width: 200px;
     height: 200px;
@@ -470,20 +433,17 @@ body.light {
     box-shadow: 0 0 60px var(--accent-glow), 0 0 120px var(--accent-glow);
 }
 
-/* Animation d'entrée : le cercle tombe depuis le haut */
 .slide-in {
     top: -150px;
     transform: translateX(-50%);
     animation: slideDown 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Animation de respiration : le cercle grossit et rétrécit */
 .circle.breathing {
     top: 50%;
     animation: breathe var(--breath-duration, 10s) infinite ease-in-out;
 }
 
-/* Keyframes : respiration du cercle (scale 0.5 → 2.5 → 0.5) */
 @keyframes breathe {
     0% {
         transform: translate(-50%, -50%) scale(0.5);
@@ -501,7 +461,6 @@ body.light {
     }
 }
 
-/* Keyframes : animation d'entrée du cercle */
 @keyframes slideDown {
     0% {
         top: -150px;
@@ -514,9 +473,7 @@ body.light {
     }
 }
 
-/* ---- MODE TUBE ---- */
-
-/* Tube vertical contenant la balle */
+/* Tube */
 .tube {
     position: absolute;
     top: 50%;
@@ -524,7 +481,6 @@ body.light {
     transform: translate(-50%, -50%);
     width: 120px;
     height: 400px;
-    /* Bordure semi-transparente grâce à color-mix */
     border: 2px solid color-mix(in srgb, var(--accent-color) 40%, transparent);
     border-radius: 60px;
     display: flex;
@@ -534,7 +490,6 @@ body.light {
     transition: border-color 0.3s ease;
 }
 
-/* Balle qui monte et descend dans le tube */
 .tube-ball {
     width: 100px;
     height: 100px;
@@ -546,12 +501,10 @@ body.light {
     transition: background-color 0.3s ease;
 }
 
-/* Animation de respiration pour la balle du tube */
 .tube-ball.breathing {
     animation: tubeBreath var(--breath-duration, 10s) infinite ease-in-out;
 }
 
-/* Keyframes : la balle monte de 280px puis redescend */
 @keyframes tubeBreath {
     0% {
         transform: translateY(0);
@@ -569,8 +522,7 @@ body.light {
     }
 }
 
-/* ---- TEXTE DE RESPIRATION ---- */
-/* Affiche "INSPIREZ" ou "EXPIREZ" au centre de l'écran */
+/* Texte INSPIREZ / EXPIREZ */
 .breath-text {
     position: absolute;
     top: 50%;
@@ -588,17 +540,15 @@ body.light {
     text-shadow: 0 0 20px var(--accent-glow);
 }
 
-/* Visible pendant la session */
 .breath-text.visible {
     opacity: 1;
 }
 
 
 /* ================================
-   5. CONTRÔLES DU BAS
+   5. CONTRÔLES DU BAS (desktop)
    ================================ */
 
-/* Barre de contrôles en bas de l'écran */
 .bottom-controls {
     position: absolute;
     bottom: 0;
@@ -612,7 +562,6 @@ body.light {
     z-index: 100;
 }
 
-/* Carte de contrôle (durée session ou durée souffle) */
 .control-group {
     display: flex;
     flex-direction: column;
@@ -629,14 +578,12 @@ body.light {
     transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* Caché pendant la session */
 .control-group.hidden {
     opacity: 0;
     transform: translateY(20px);
     pointer-events: none;
 }
 
-/* Label du contrôle */
 .control-group label {
     font-size: 0.75rem;
     font-weight: 500;
@@ -648,20 +595,17 @@ body.light {
     gap: 6px;
 }
 
-/* Icône colorée à côté du label */
 .control-group label i {
     font-size: 0.7rem;
     color: var(--accent-color);
 }
 
-/* Ligne contenant le slider et les boutons +/- */
 .control-inputs {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-/* Boutons + et - */
 .control-btn {
     background-color: transparent;
     border: 1px solid var(--control-border);
@@ -688,19 +632,18 @@ body.light {
     transform: scale(0.95);
 }
 
-/* Affichage de la valeur (ex: "5 min" ou "5s") */
 #breathValue,
-#sessionValue {
+#sessionValue,
+.sidebar-value {
     color: var(--text-color);
     font-size: 1.15rem;
     font-weight: 600;
     min-width: 60px;
     text-align: center;
     font-variant-numeric: tabular-nums;
-    /* chiffres à largeur fixe */
 }
 
-/* ---- Slider (barre de défilement) ---- */
+/* Slider */
 input[type=range] {
     -webkit-appearance: none;
     appearance: none;
@@ -711,7 +654,6 @@ input[type=range] {
     outline: none;
 }
 
-/* Curseur du slider (Chrome, Edge, Safari) */
 input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -729,7 +671,6 @@ input[type=range]::-webkit-slider-thumb:hover {
     box-shadow: 0 0 16px var(--accent-glow);
 }
 
-/* Curseur du slider (Firefox) */
 input[type=range]::-moz-range-thumb {
     width: 16px;
     height: 16px;
@@ -740,7 +681,7 @@ input[type=range]::-moz-range-thumb {
     box-shadow: 0 0 8px var(--accent-glow);
 }
 
-/* ---- Bouton Start / Stop ---- */
+/* Bouton Start/Stop (desktop) */
 .action-button {
     padding: 16px 48px;
     font-size: 1.05rem;
@@ -765,18 +706,15 @@ input[type=range]::-moz-range-thumb {
     font-size: 0.95rem;
 }
 
-/* Effet de survol : léger décalage vers le haut */
 .action-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 32px var(--accent-glow);
 }
 
-/* Effet de clic */
 .action-button:active {
     transform: translateY(0) scale(0.98);
 }
 
-/* État "Stop" — bouton rouge */
 .action-button.stop {
     background: #ef4444;
     box-shadow: 0 4px 24px rgba(239, 68, 68, 0.35);
@@ -789,10 +727,9 @@ input[type=range]::-moz-range-thumb {
 
 
 /* ================================
-   6. BOUTON HAMBURGER (mobile)
+   6. BOUTON HAMBURGER
    ================================ */
 
-/* Invisible sur desktop */
 .menu-btn {
     display: none;
     background: var(--glass-bg);
@@ -808,6 +745,7 @@ input[type=range]::-moz-range-thumb {
     transition: all 0.3s ease;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .menu-btn:hover {
@@ -817,10 +755,10 @@ input[type=range]::-moz-range-thumb {
 
 
 /* ================================
-   7. SIDEBAR MOBILE
+   7. SIDEBAR
    ================================ */
 
-/* Fond sombre derrière la sidebar */
+/* Overlay sombre */
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -836,7 +774,7 @@ input[type=range]::-moz-range-thumb {
     opacity: 1;
 }
 
-/* Panneau latéral glissant depuis la gauche */
+/* Panneau qui glisse depuis la gauche */
 .sidebar {
     position: fixed;
     top: 0;
@@ -844,6 +782,7 @@ input[type=range]::-moz-range-thumb {
     width: 300px;
     max-width: 85vw;
     height: 100vh;
+    height: 100dvh;
     background: var(--panel-bg);
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
@@ -854,16 +793,14 @@ input[type=range]::-moz-range-thumb {
     display: flex;
     flex-direction: column;
     padding: 24px;
-    gap: 24px;
+    gap: 28px;
     overflow-y: auto;
 }
 
-/* Sidebar ouverte */
 .sidebar.open {
     transform: translateX(0);
 }
 
-/* En-tête de la sidebar */
 .sidebar-header {
     display: flex;
     justify-content: space-between;
@@ -883,7 +820,6 @@ input[type=range]::-moz-range-thumb {
     color: var(--accent-color);
 }
 
-/* Bouton fermer la sidebar */
 .sidebar-close {
     background: transparent;
     border: 1px solid var(--control-border);
@@ -904,11 +840,10 @@ input[type=range]::-moz-range-thumb {
     background: var(--control-hover-bg);
 }
 
-/* Section de la sidebar */
 .sidebar-section {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 .sidebar-section label {
@@ -928,77 +863,31 @@ input[type=range]::-moz-range-thumb {
     opacity: 0.8;
 }
 
-/* Sélecteur de mode dans la sidebar */
-.sidebar-mode-selector {
-    display: flex;
-    gap: 8px;
-}
-
-.sidebar-mode-btn {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid var(--control-border);
-    background: var(--glass-bg);
-    color: var(--text-muted);
-    border-radius: 12px;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.25s ease;
-}
-
-.sidebar-mode-btn.active {
-    background: var(--accent-color);
-    color: #000;
-    font-weight: 600;
-    border-color: var(--accent-color);
-    box-shadow: 0 2px 12px var(--accent-glow);
-}
-
-.sidebar-mode-btn:hover:not(.active) {
-    color: var(--text-color);
-    background: var(--control-hover-bg);
-}
-
-/* Contrôles dans la sidebar (slider + boutons +/-) */
 .sidebar-control {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-.sidebar-value {
-    color: var(--text-color);
-    font-size: 1.1rem;
-    font-weight: 600;
-    min-width: 55px;
-    text-align: center;
-    font-variant-numeric: tabular-nums;
-}
-
-/* Slider dans la sidebar */
 .sidebar-control input[type=range] {
-    width: 80px;
+    width: 100%;
+    margin-top: 4px;
 }
 
 
 /* ================================
-   8. BOUTON START FLOTTANT (mobile)
+   8. BOUTON START FLOTTANT
    ================================ */
 
-/* Invisible sur desktop */
 .mobile-action-button {
     display: none;
     position: fixed;
     bottom: 28px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 16px 48px;
+    padding: 16px 52px;
     font-size: 1.05rem;
     font-family: 'Inter', sans-serif;
     font-weight: 600;
@@ -1032,79 +921,136 @@ input[type=range]::-moz-range-thumb {
 
 
 /* ================================
-   9. RESPONSIVE MOBILE
+   9. RESPONSIVE
    ================================ */
 
-@media (max-width: 700px) {
+/* --- Tablette et mobile (≤ 900px) --- */
+@media (max-width: 900px) {
 
-    /* Afficher le bouton hamburger */
+    /* Afficher le hamburger */
     .menu-btn {
         display: flex;
     }
 
-    /* Réorganiser la top-bar : hamburger à gauche, mode/chrono au centre */
+    /* Réorganiser la top-bar */
     .top-bar {
         width: 100%;
         padding: 0 16px;
+        left: 0;
+        transform: none;
         justify-content: flex-start;
-        gap: 12px;
+        gap: 0;
     }
 
-    /* Centrer le sélecteur de mode */
+    /* Centrer le mode selector avec margin auto */
     .mode-selector {
         margin: 0 auto;
     }
 
     .session-info-top {
         margin: 0 auto;
-        gap: 8px;
+        gap: 10px;
     }
 
     .info-chip {
-        padding: 8px 12px;
-        font-size: 0.85rem;
+        padding: 8px 14px;
+        font-size: 0.9rem;
         border-radius: 12px;
     }
 
-    /* Cacher les contrôles desktop en bas */
+    /* Cacher les contrôles desktop */
     .bottom-controls {
         display: none;
     }
 
-    /* Afficher le bouton Start flottant en bas */
+    /* Afficher le bouton Start flottant */
     .mobile-action-button {
         display: flex;
     }
 
-    /* Cacher le bouton paramètres desktop, il sera dans la sidebar */
+    /* Adapter le bouton paramètres */
     .settings-btn {
-        top: 32px;
         right: 16px;
     }
 
-    /* Texte de respiration plus petit */
-    .breath-text {
-        font-size: 1.3rem;
-        letter-spacing: 0.2em;
-    }
-
-    /* Panneau paramètres adapté */
     .settings-panel {
         right: 16px;
-        top: 88px;
         min-width: 220px;
     }
 }
 
-/* Tablette : les contrôles s'empilent */
-@media (min-width: 701px) and (max-width: 900px) {
-    .bottom-controls {
-        gap: 20px;
-        padding: 16px 24px 24px;
+/* --- Mobile petit écran (≤ 500px) --- */
+@media (max-width: 500px) {
+
+    .top-bar {
+        top: 20px;
+        padding: 0 12px;
     }
 
-    .control-group {
-        min-width: 220px;
-        padding: 14px 16px;
+    .mode-btn {
+        padding: 8px 16px;
+        font-size: 0.8rem;
+        gap: 6px;
+    }
+
+    .settings-btn {
+        top: 20px;
+        right: 12px;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        font-size: 1rem;
+    }
+
+    .settings-panel {
+        right: 12px;
+        top: 72px;
+        padding: 20px;
+    }
+
+    .menu-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .breath-text {
+        font-size: 1.2rem;
+        letter-spacing: 0.15em;
+    }
+
+    .mobile-action-button {
+        bottom: 20px;
+        padding: 14px 44px;
+        font-size: 0.95rem;
+        border-radius: 14px;
+    }
+
+    /* Tube plus petit sur mobile */
+    .tube {
+        width: 90px;
+        height: 300px;
+    }
+
+    .tube-ball {
+        width: 72px;
+        height: 72px;
+    }
+
+    /* Cercle guide plus petit */
+    .guide-circle {
+        width: 350px;
+        height: 350px;
+    }
+
+    .circle {
+        width: 150px;
+        height: 150px;
+    }
+
+    .info-chip {
+        padding: 7px 10px;
+        font-size: 0.8rem;
+        gap: 5px;
     }
 }
